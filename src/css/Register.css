@@ -1,0 +1,12 @@
+.regist-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+    width: 30%;
+    gap: 30px;
+    background-color: #00509D;
+    border-radius: 20px;
+    padding: 20px;
+  }
+  
