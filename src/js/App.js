@@ -21,8 +21,8 @@ function App() {
       <header>
         <h1>KALENDÁŘ</h1>
       </header>
-      <div class="main_form">
-        <img class="obrazek_pozadi" src={time} alt="time" />
+      <div className="main_form">
+        <img className="obrazek_pozadi" src={time} alt="time" />
         <div
           className={`container ${isSignUpActive ? "right-panel-active" : ""}`}
         >
@@ -52,7 +52,7 @@ function App() {
             </div>
           </div>
         </div>
-        <img class="obrazek_pozadi_right" src={pc} alt="pc" />
+        <img className="obrazek_pozadi_right" src={pc} alt="pc" />
       </div>
     </div>
   );

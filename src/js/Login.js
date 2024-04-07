@@ -15,14 +15,14 @@ function Login() {
       "Content-Type": "application/json",
       Authorization: "Basic " + basicAuth,
     },
-    body:{
+    body: {
       username: username,
-      password: password,
+      password: password
     }
   };
 
   const handleLogin = async () => {
-     await fetch("https://localhost:2024/login", requestOptions)
+     await fetch('https://localhost:2024/api/verifyUser', requestOptions)
       .then((response) => {
         setUser(response.data);
         console.log("response.data");
