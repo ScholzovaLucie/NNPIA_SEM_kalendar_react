@@ -1,59 +1,31 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'// Importujeme Navigate pro přesměrování
 import "../css/App.css";
 import Login from "./Login";
-import Registration from "./Register";
-import time from "./../img/time.png";
-import pc from "./../img/pc.png";
+import HomePage from "./HomePage";
 
 function App() {
-  const [isSignUpActive, setIsSignUpActive] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const handleSignUpClick = () => {
-    setIsSignUpActive(true);
-  };
 
-  const handleSignInClick = () => {
-    setIsSignUpActive(false);
-  };
+  if(!user) {
+    return <Login setUser={setUser} />
+  }
+
 
   return (
     <div className="app-container">
       <header>
         <h1>KALENDÁŘ</h1>
       </header>
-      <div className="main_form">
-        <img className="obrazek_pozadi" src={time} alt="time" />
-        <div
-          className={`container ${isSignUpActive ? "right-panel-active" : ""}`}
-        >
-          <Login />
-          <Registration />
-          <div className="overlay-container">
-            <div className="overlay">
-              <div className="overlay-panel overlay-left">
-                <h1>Vítejte zpět!</h1>
-                <p>
-                  Chcete-li se dostat ke svému kalendáři, přihlaste se pomocí
-                  svých osobních údajů.
-                </p>
-                <button className="ghost" onClick={handleSignInClick}>
-                  Přihlásit se
-                </button>
-              </div>
-              <div className="overlay-panel overlay-right">
-                <h1>Ahoj, návštěvníku!</h1>
-                <p>
-                  Zadejte své osobní údaje a zjisti možnosti našeho kalendáře
-                </p>
-                <button className="ghost" onClick={handleSignUpClick}>
-                  Registrace
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <img className="obrazek_pozadi_right" src={pc} alt="pc" />
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage user={user}/>}>
+          </Route>
+          <Route path="/userInfo">
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }

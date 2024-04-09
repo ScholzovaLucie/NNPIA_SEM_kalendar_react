@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from "react";
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css';
+import "../css/HomePage.css";
 
-function HomePage() {
+export default function HomePage( {user}) {
+  const [date, setDate] = useState();
   return (
-    <div>
-      <h2>Kalendář</h2>
-      {/* Kalendářová komponenta */}
-      {/* Seznam osob */}
-      {/* Upozornění na nejbližší svátek a narozeniny */}
+    <div className='main_kalendar'>
+      <div>{user['username']}</div>
+      <div className='block_clanedar'>
+        <div>{date.value}</div>
+      <Calendar onChange={setDate} value={date} />
+    </div>
     </div>
   );
 }
 
-export default HomePage;
