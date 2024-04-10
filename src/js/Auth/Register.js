@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/Register.css'; // Importujeme styly
+import '../../css/Register.css'; // Importujeme styly
 
 function Registration() {
   const [username, setUsername] = useState('');
@@ -9,7 +9,7 @@ function Registration() {
   const [email, setEmail] = useState('');
   const [user, setUser] = useState(null);
 
-  const token = `${username}:${password}`;
+  const token = `user:heslo`;
   var basicAuth = Buffer.from(token).toString("base64");
   const requestOptions = {
     method: "POST",

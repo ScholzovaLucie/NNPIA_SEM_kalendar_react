@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'// Importujeme Navigate pro přesměrování
 import "../css/App.css";
-import Login from "./Login";
+import Login from "./Auth/Login";
 import HomePage from "./HomePage";
 
 function App() {

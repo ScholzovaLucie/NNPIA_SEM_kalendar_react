@@ -14,15 +14,7 @@ header {
 	font-family: 'Sucrose Bold Two';
 	color: #00296B;
 }
-main {
-  display: flex;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 5%;
-  height: 100%;
-}
+
 
 .app-container {
   width: 98%;

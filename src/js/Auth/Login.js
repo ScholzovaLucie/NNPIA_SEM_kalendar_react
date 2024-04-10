@@ -1,25 +1,17 @@
 import React, { useState } from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 
-import "../css/Login.css";
+import "../../css/Login.css";
 import Registration from "./Register";
-import time from "./../img/time.png";
-import pc from "./../img/pc.png";
+import time from "./../../img/time.png";
+import pc from "./../../img/pc.png";
 import PropTypes from 'prop-types';
+import ApiService from './../ApiService';
 
 export default function Login({ setUser }) {
   const [localUsername, setlocalUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const token = `${localUsername}:${password}`;
-  var basicAuth = Buffer.from(token).toString("base64");
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Basic " + basicAuth,
-    },
-  };
+  const apiService = new ApiService('http://localhost:2024/api');
 
   const [isSignUpActive, setIsSignUpActive] = useState(false);
 
@@ -32,18 +24,15 @@ export default function Login({ setUser }) {
   };
 
   const handleLogin = async () => {
-    await fetch(`http://localhost:2024/api/verifyUser?username=${localUsername}&password=${password}`, requestOptions)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setUser(data);
-        if (data != null) {
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+
+    apiService.get('verifyUser', { username: localUsername, password:password })
+    .then((data) => {
+      setUser(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+   
   };
 
   return (
@@ -64,7 +53,7 @@ export default function Login({ setUser }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button onClick={handleLogin}>Přihlásit</button>
+          <button className="loginbutton" onClick={handleLogin}>Přihlásit</button>
         </div>
         <Registration />
         <div className="overlay-container">

@@ -78,6 +78,7 @@
     max-width: 100%;
     min-height: 480px;
     display: flex;
+    margin-top: -15%;
   }
   
   .main_form{
@@ -98,7 +99,7 @@
     position: relative;
     display: flex;
     width: 320px;
-    top: -20%;
+    margin-top: -20%;
     left: 80%;
     z-index: -10;
   }

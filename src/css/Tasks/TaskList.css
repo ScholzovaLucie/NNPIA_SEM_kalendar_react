@@ -1,0 +1,122 @@
+.seznamUkolu{
+    grid-row: 2;
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.task-item {
+    background-color: #00509D; /* Tmavě modrá */
+    color: #FDC500; /* Žlutá */
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .task-item:hover {
+    transform: translateY(-2px);
+    background-color: #003F88; /* Střední modrá */
+  }
+  
+  .task-item h3 {
+    margin: 0;
+    color: #FFD500; /* Světle žlutá */
+  }
+  
+  .task-item .actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-icon {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    fill: #FDC500; /* Žlutá pro ikony */
+  }
+  
+  .action-icon:hover {
+    fill: #FFD500; /* Světle žlutá */
+  }
+
+  .action-button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .edit {
+    background-color: #FDC500; /* Žlutá */
+    color: #00296B; /* Tmavě modrá */
+  }
+  
+  .delete {
+    background-color: #003F88; /* Modrá */
+    color: #FFFFFF; /* Bílá */
+  }
+  
+  .action-button:hover {
+    opacity: 0.9;
+  }
+
+  .seznamTypu{
+    grid-row: 1;
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+  }
+  .seznamTypu .seznam {
+    width: 100%;
+    overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .seznamTypu button{
+    width: 30px;
+    height: 30px;
+    margin: 1px;
+  }
+
+
+  .seznamTypu .action-button{
+    width: 35px;
+  }
+  
+  .type-item{
+    background-color: #00509D;
+  color: #FDC500;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  width: 8vw;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  margin: 0;
+  }
+
+  .type-item:hover{
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
