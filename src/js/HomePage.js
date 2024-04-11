@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../css/App.css";
 import PersonList from "./PersonList/PersonList";
+import Profile from "./Profile/Profile";
 import TaskList from "./TaskList/TaskList";
 import TaskTypeList from "./TaskList/TaskTypeList";
 import Logout from "./Auth/Logout";
 import ApiService from "./ApiService";
 import cake from "./../img/birthday-cake.png";
-
+import kalendar from "./../img/icons8-calendar-64.png";
 import "../css/HomePage.css";
 
 import Calendar from "react-calendar";
@@ -15,8 +16,8 @@ import "react-calendar/dist/Calendar.css";
 function formatDate(dateString) {
   const date = new Date(dateString);
   const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
@@ -27,7 +28,9 @@ export default function HomePage({ user, setUser }) {
   const [types, setTypes] = useState([]);
   const [closestBirthdayPerson, setClosestBirthdayPerson] = useState(null);
   const [closestNamedayPerson, setClosestNamedayPerson] = useState(null);
-
+  const [persons, setPersons] = useState([]);
+  const [error, setError] = useState("");
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -35,41 +38,32 @@ export default function HomePage({ user, setUser }) {
         .get("getClosestBirthday", { username: user["username"] })
         .then((data) => {
           setClosestBirthdayPerson(data);
+          setError("");
         })
         .catch((error) => {
-          console.error(error);
+          setClosestBirthdayPerson(null);
+          setError(error);
         });
 
       await apiService
         .get("getClosestNameDay", { username: user["username"] })
         .then((data) => {
           setClosestNamedayPerson(data);
+          setError("");
         })
         .catch((error) => {
-          console.error(error);
+          setClosestNamedayPerson(null);
+          setError(error);
         });
     };
 
     fetchEvents();
+  }, [user, persons]);
 
-    const now = new Date();
-    const midnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1
-    );
-    const msUntilMidnight = midnight.getTime() - now.getTime();
-
-    const timeoutId = setTimeout(() => {
-      fetchEvents();
-      setInterval(fetchEvents, 24 * 60 * 60 * 1000); 
-    }, msUntilMidnight);
-console.log(types);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-    
-  }, [user,types]);
+  useEffect(() => {
+    console.log(error);
+    setError(error);
+  }, [error]);
 
   return (
     <div className="app-container">
@@ -77,7 +71,7 @@ console.log(types);
         <div className="upozorneni">
           {closestBirthdayPerson && (
             <div>
-              <img className='icon' alt="Narozeniny" src={cake}/>
+              <img className="icon" alt="Narozeniny" src={cake} />
               <h2>{closestBirthdayPerson["firstName"]}&nbsp;</h2>
               <h2>{closestBirthdayPerson["lastName"]}&nbsp;</h2>
               <h2>
@@ -93,7 +87,7 @@ console.log(types);
           )}
           {closestNamedayPerson && (
             <div>
-              <img className='icon' alt="Narozeniny" src={cake}/>
+              <img className="icon" alt="Svatek" src={kalendar} />
               <h2>{closestNamedayPerson["firstName"]}&nbsp;</h2>
               <h2>{closestNamedayPerson["lastName"]}&nbsp;</h2>
               <h2>
@@ -108,15 +102,44 @@ console.log(types);
             </div>
           )}
         </div>
-        <Calendar className="block_clanedar" onChange={setDate} value={date} user={user}/>
-        <PersonList user={user} />
-        <TaskList user={user} date={formatDate(date.toString())} types={types}/>
-        <TaskTypeList user={user} setTypesGlobal={setTypes} />
+        <Calendar
+          className="block_clanedar"
+          onChange={setDate}
+          value={date}
+          user={user}
+          tileContent={({ date, view }) => {
+            const dateString = formatDate(date.toString());
+            const eventForDay = events.find(
+              (event) => event.date === dateString
+            );
+            return view === "month" && eventForDay ? (
+              <span class="dot"></span>
+            ) : null;
+          }}
+        />
+        <PersonList
+          user={user}
+          setPersonsGlobal={setPersons}
+          setError={setError}
+        />
+        <TaskList
+          user={user}
+          date={formatDate(date.toString())}
+          types={types}
+          setError={setError}
+          setEventsGlobal={setEvents}
+        />
+        <TaskTypeList
+          user={user}
+          setTypesGlobal={setTypes}
+          setError={setError}
+        />
       </main>
       <aside>
-        <Logout setUser={setUser}/>
+      <Profile user={user} />
+        <Logout setUser={setUser} />
       </aside>
-      <footer>{/* Footer content */}</footer>
+      {error && <div className="errorHandler">{error}</div>}
     </div>
   );
 }

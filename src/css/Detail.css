@@ -1,0 +1,37 @@
+ 
+  .detail-content {
+    z-index: 1024;
+    position: absolute;
+    overflow: visible;
+    background-color: #FDC500;
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+.detail-content p {
+    margin: 1px;
+    padding: 0;
+}
+
+.detail-blok{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    gap: 5px;
+    padding: 5px;
+}
+
+.detail-blok h3{
+    color: #003F88;
+}
+
+.detail-blok p {
+    font-weight: bold;
+}
+  

@@ -3,7 +3,7 @@ import ApiService from './../ApiService';
 import TaskTypeItem from './TaskTypeItem'; 
 import Modal from './../Modal';
 
-function TaskTypeList({ user, setTypesGlobal }) {
+function TaskTypeList({ user, setTypesGlobal, setError }) {
     const apiService = new ApiService('http://localhost:2024/api');
     const [types, setTypes] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,8 +16,9 @@ function TaskTypeList({ user, setTypesGlobal }) {
           .then((data) => {
             setTypes(data);
             setTypesGlobal(data);
+            setError('')
           })
-          .catch(error => console.error("Chyba při mazání osoby:", error));
+          .catch(error => setError("Chyba při mazání osoby:", error));
       };
 
       const onEdit = (id) => {
@@ -43,8 +44,9 @@ function TaskTypeList({ user, setTypesGlobal }) {
             setTypes(data);
             setTypesGlobal(data);
             setIsModalOpen(false);
+            setError('')
               })
-              .catch(error =>  console.error("Chyba při aktualizaci typu úkolu:", error));
+              .catch(error =>  setError("Chyba při aktualizaci typu úkolu:", error));
       };
     
       const addTask = async () => {
@@ -65,9 +67,10 @@ function TaskTypeList({ user, setTypesGlobal }) {
             .then((data) => {
                 setTypes(data);
                 setTypesGlobal(data);
+                setError('')
             })
             .catch((error) => {
-              console.error(error);
+              setError(error);
             });
            
       };
@@ -77,7 +80,6 @@ function TaskTypeList({ user, setTypesGlobal }) {
           ...prevState,
           [e.target.name]: e.target.value
         }));
-        console.log(newTask);
       };
     
     
@@ -86,9 +88,10 @@ function TaskTypeList({ user, setTypesGlobal }) {
           .then((data) => {
             setTypes(data);
             setTypesGlobal(data);
+            setError('')
           })
-          .catch(error => console.error("Chyba při načítání dat z API:", error));
-      }, [user, setTypesGlobal]); 
+          .catch(error => setError("Chyba při načítání dat z API:", error));
+      }, [user]); 
 
     return (
         <div className='seznamTypu'>

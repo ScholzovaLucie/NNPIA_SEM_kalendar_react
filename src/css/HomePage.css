@@ -86,11 +86,6 @@ header {
     height: 50px;
 }
 
-.logout{
-    position: absolute;
-    left: 20px
-}
-
 .icon{
     width: 30px;
     margin-right: 10px;

@@ -63,6 +63,8 @@ a {
 
 
 .errorHandler{
+	position: absolute;
+	bottom: 0;
 	color: red;
 	text-transform: uppercase;
 	font-style: italic;
@@ -95,4 +97,19 @@ a {
   * {
 	scrollbar-width: thin; /* "auto" nebo "thin" */
 	scrollbar-color: #00296B #f0f0f0; /* barva thumb a track */
+  }
+
+
+  .dot {
+	height: 5px;
+	width: 5px;
+	background-color: red;
+	border-radius: 50%;
+	display: inline-block;
+  }
+
+  aside {
+	position: absolute;
+	left: 5px;
+	top: 5px;
   }

@@ -5,6 +5,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: 80%;
+  gap: 5px;
 }
 
 .task-item {
@@ -69,6 +71,18 @@
     background-color: #003F88; /* Modrá */
     color: #FFFFFF; /* Bílá */
   }
+
+  .info{
+padding: 2px;
+background-color: #FDC500;
+display: flex;
+align-items: center;
+justify-content: center;
+  }
+
+  .info svg{
+    width: 25px;
+  }
   
   .action-button:hover {
     opacity: 0.9;
@@ -111,6 +125,7 @@
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 8px;
+  max-width: 110px;
   display: flex;
   width: 8vw;
   align-items: center;
@@ -118,7 +133,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   margin: 0;
-
     width: 100%;
     gap: 10px;
   }
@@ -148,6 +162,9 @@
   }
 
   .seznamUkoluBlok{
-    width: 100%;
+    overflow-y: scroll;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
   }
   

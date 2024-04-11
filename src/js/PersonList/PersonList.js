@@ -4,8 +4,7 @@ import ApiService from './../ApiService';
 import Modal from './../Modal';
 import "../../css/Person/PersonList.css";
 
-
-function PersonList({ user }) {
+function PersonList({ user, setPersonsGlobal, setError }) {
     const apiService = new ApiService('http://localhost:2024/api');
   const [persons, setPersons] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,18 +27,19 @@ function PersonList({ user }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     await apiService.put('updatePerson', {
         username: user['username'],
         id: editingPerson['id'],
         firstName: editingPerson['firstName'],
         lastName: editingPerson['lastName'],
-        birthday: new Date(editingPerson['birthday'])
+        birthday: editingPerson['birthday']
       }).then((data) => {
         setPersons(data);
+        setPersonsGlobal(data);
         setIsModalOpen(false);
+        setError('')
           })
-          .catch(error =>  console.error("Chyba při aktualizaci osoby:", error));
+          .catch(error =>  setError("Chyba při aktualizaci osoby:", error));
             
 
   };
@@ -64,9 +64,11 @@ function PersonList({ user }) {
         })
         .then((data) => {
             setPersons(data);
+            setPersonsGlobal(data);
+            setError('')
         })
         .catch((error) => {
-          console.error(error);
+          setError(error);
         });
        
   };
@@ -83,17 +85,21 @@ function PersonList({ user }) {
     apiService.delete('removePerson', { id: id, username: user['username'] })
       .then((data) => {
         setPersons(data);
+        setPersonsGlobal(data);
+        setError('')
       })
-      .catch(error => console.error("Chyba při mazání osoby:", error));
+      .catch(error => setError("Chyba při mazání osoby:", error));
   };
 
   useEffect(() => {
     apiService.get('getAllPersons', { username: user['username'] })
       .then((data) => {
         setPersons(data);
+        setPersonsGlobal(data);
         setIsModalOpen(false);
+        setError('')
       })
-      .catch(error => console.error("Chyba při načítání dat z API:", error));
+      .catch(error => setError("Chyba při načítání dat z API:", error));
   }, [user]); 
 
   return (
@@ -124,7 +130,7 @@ function PersonList({ user }) {
             </div>
             <div>
               <label>Datum narození:</label>
-              <input type="date" name="birthdate" value={editingPerson['birthday'] || ''} onChange={handleEditChange} />
+              <input type="date" name="birthday" value={editingPerson['birthday'] || ''} onChange={handleEditChange} />
             </div>
             <button className="loginbutton" type="submit">Uložit změny</button>
           </form>
