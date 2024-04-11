@@ -62,5 +62,37 @@ a {
 }
 
 
+.errorHandler{
+	color: red;
+	text-transform: uppercase;
+	font-style: italic;
+	margin: 5px;
+	text-shadow:1px 1px 1px #333;
+}
 
+/* Styling pro scrollbar */
+::-webkit-scrollbar {
+	width: 8px; /* Šířka scrollbaru */
+	height: 8px; /* Výška scrollbaru pro horizontální scrollbar, pokud je potřeba */
+  }
+  
+  /* Styling pro track (dráhu) scrollbaru */
+  ::-webkit-scrollbar-track {
+	background: #f0f0f0; /* Světlé pozadí, můžete přizpůsobit barvu dle vaší palety */
+  }
+  
+  /* Styling pro samotný posuvník (thumb) scrollbaru */
+  ::-webkit-scrollbar-thumb {
+	background: #00296B; /* Modrá z vaší palety */
+	border-radius: 4px; /* Zaoblené rohy */
+  }
+  
+  /* Styling pro posuvník při hoveru */
+  ::-webkit-scrollbar-thumb:hover {
+	background: #003F88; /* Tmavší modrá pro hover efekt */
+  }
 
+  * {
+	scrollbar-width: thin; /* "auto" nebo "thin" */
+	scrollbar-color: #00296B #f0f0f0; /* barva thumb a track */
+  }

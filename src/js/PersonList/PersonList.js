@@ -99,7 +99,7 @@ function PersonList({ user }) {
   return (
     <div className='seznamOsob'>
       <h2>Seznam osob</h2>
-      <div>
+      <div className='seznamOsobBlok'>
         {persons.map(person => (
         <PersonItem person={person} 
                     onEdit={onEdit} 

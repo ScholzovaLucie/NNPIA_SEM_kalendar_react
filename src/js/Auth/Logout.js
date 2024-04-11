@@ -1,14 +1,14 @@
 import React from 'react';
  
-function Logout() {
+function Logout({setUser}) {
 
 
   const handleLogout = () => {
-        
+    setUser();
    };
 
   return (
-    <button onClick={handleLogout}>Odhlásit se</button>
+    <button className="loginbutton logout" onClick={handleLogout}>Odhlásit se</button>
   );
 }
 

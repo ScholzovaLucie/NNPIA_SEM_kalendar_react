@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
 
 import "../../css/Login.css";
 import Registration from "./Register";
@@ -8,9 +7,10 @@ import pc from "./../../img/pc.png";
 import PropTypes from 'prop-types';
 import ApiService from './../ApiService';
 
-export default function Login({ setUser }) {
+export default function Login({ setUser, hash }) {
   const [localUsername, setlocalUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const apiService = new ApiService('http://localhost:2024/api');
 
   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -24,12 +24,13 @@ export default function Login({ setUser }) {
   };
 
   const handleLogin = async () => {
-
-    apiService.get('verifyUser', { username: localUsername, password:password })
+    apiService.get('verifyUser', { username: localUsername, password:hash(password) })
     .then((data) => {
+      setError("");
       setUser(data);
     })
     .catch((error) => {
+      setError("Uživatel nenalezen");
       console.error(error);
     });
    
@@ -53,9 +54,10 @@ export default function Login({ setUser }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <div className="errorHandler">{error}</div>
           <button className="loginbutton" onClick={handleLogin}>Přihlásit</button>
         </div>
-        <Registration />
+        <Registration setUser={setUser} hash={hash}/>
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">

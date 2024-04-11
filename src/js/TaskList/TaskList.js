@@ -5,6 +5,7 @@ import Modal from './../Modal';
 import "../../css/Tasks/TaskList.css";
 import dayjs from 'dayjs';
 import { TimePicker } from 'antd';
+import Combobox from "react-widgets/Combobox";
 
 function formatTime(dateString) {
     const date = new Date(dateString);
@@ -15,13 +16,13 @@ function formatTime(dateString) {
   }
 
 
-function TaskList({ user, date }){
+function TaskList({ user, date, types }){
     const apiService = new ApiService('http://localhost:2024/api');
     const [events, setEvents] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [newTask, setNewTask] = useState(null);
-  const [openNewTask, setOpenNewTask] = useState(null);
+    const [openNewTask, setOpenNewTask] = useState(null);
 
   const onEdit = (id) => {
     const taskToEdit = events.find(event => event.id === id);
@@ -38,6 +39,8 @@ function TaskList({ user, date }){
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+     
     
     await apiService.put('updateTask', {
         username: user['username'],
@@ -45,6 +48,7 @@ function TaskList({ user, date }){
         name: editingTask['name'],
         description: editingTask['description'],
         date: date,
+        type: newTask['type'],
         time: editingTask['time']
       }).then((data) => {
         setEvents(data);
@@ -57,7 +61,8 @@ function TaskList({ user, date }){
     const newTask = { 
         name: "",
         description: "",
-        time: ""
+        time: "",
+        typeid:""
     };
     setNewTask(newTask);
     setOpenNewTask(true);
@@ -66,8 +71,6 @@ function TaskList({ user, date }){
 
   
   const newTaskSubmit = async (e) => {
-    console.log(newTask);
-    console.log(date);
     e.preventDefault();
         await apiService.put('createTask', { 
             username: user['username'], 
@@ -75,6 +78,7 @@ function TaskList({ user, date }){
             date: date,
             time: newTask['time'],
             name: newTask['name'],
+            typeid: newTask['typeid'],
         })
         .then((data) => {
             setEvents(data);
@@ -90,7 +94,6 @@ function TaskList({ user, date }){
       ...prevState,
       [e.target.name]: e.target.value
     }));
-    console.log(newTask);
   };
 
  
@@ -120,6 +123,20 @@ function TaskList({ user, date }){
           .catch(error => console.error("Chyba při mazání ukolu:", error));
       };
 
+      const handleEditTypeChange= (e) => {
+        setEditingTask(prevState => ({
+          ...prevState,
+          typeid: e['id']
+        }));
+      };
+
+      const editNewChange= (e) => {
+        setNewTask(prevState => ({
+          ...prevState,
+          typeid: e['id']
+        }));
+      };
+
       useEffect(() => {
         apiService.get('allEvents', { username: user['username'], date: date })
           .then((data) => {
@@ -127,14 +144,16 @@ function TaskList({ user, date }){
             setIsModalOpen(false);
           })
           .catch(error => console.error("Chyba při načítání dat z API:", error));
-      }, [user, date]); 
+
+          console.log(types)
+      }, [user, date, types]); 
 
 
 
     return(
         <div className='seznamUkolu'>
  <h2>Seznam úkolů</h2>
-<div>
+<div className='seznamUkoluBlok'>
         {events.map(event => (
         <TaskItem event={event} 
                     onEdit={onEdit} 
@@ -158,7 +177,14 @@ function TaskList({ user, date }){
               <input type="text" name="description" value={editingTask['description'] || ''} onChange={handleEditChange} />
             </div>
             <div>
-              <label>čas:</label>
+            <label>Typ:</label>
+              <Combobox
+    data={types}
+    textField='name'
+    onSelect={handleEditTypeChange}
+  />
+            </div>
+            <div>
               <TimePicker defaultValue={dayjs(editingTask['time'] ||'12:08', 'HH:mm')}  onChange={dateEditCange}/>
             </div>
             <button className="loginbutton" type="submit">Uložit změny</button>
@@ -176,7 +202,14 @@ function TaskList({ user, date }){
               <input type="text" name="description" value={newTask['description'] ||''} onChange={handleNewChange} />
             </div>
             <div>
-              <label>čas:</label>
+              <label>Typ:</label>
+              <Combobox
+    data={types}
+    textField='name'
+    onSelect={editNewChange}
+  />
+            </div>
+            <div>
               <TimePicker defaultValue={dayjs(newTask['time'] ||'12:08', 'HH:mm')} onChange={dateNewCange}/>
             </div>
             <button className="loginbutton" type="submit">Přidat</button>

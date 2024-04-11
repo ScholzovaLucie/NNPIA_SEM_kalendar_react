@@ -7,8 +7,9 @@
   flex-direction: column;
 }
 
-.seznamOsob div{
-  overflow: scroll;
+.seznamOsob .seznamOsobBlok{
+  overflow-y: scroll;
+  flex-direction: column;
 }
 
 .person-item {
@@ -17,11 +18,24 @@
     padding: 20px;
     margin-bottom: 10px;
     border-radius: 8px;
+    flex-direction: row;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease-in-out;
+    width: 98%;
+    gap: 10px;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .person-item {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+    }
   }
   
   .person-item:hover {
@@ -36,7 +50,10 @@
   
   .person-item .actions {
     display: flex;
-    gap: 10px;
+    gap: 5px;
+    width: 90%;
+    align-items: center;
+    justify-content: center;
   }
   
   .action-icon {
@@ -73,4 +90,10 @@
     opacity: 0.9;
   }
   
-  
+  .seznamOsobBlok{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }

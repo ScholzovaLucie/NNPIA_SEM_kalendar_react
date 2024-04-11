@@ -3,8 +3,9 @@ import "../css/App.css";
 import PersonList from "./PersonList/PersonList";
 import TaskList from "./TaskList/TaskList";
 import TaskTypeList from "./TaskList/TaskTypeList";
-import Profile from "./Profile/Profile";
+import Logout from "./Auth/Logout";
 import ApiService from "./ApiService";
+import cake from "./../img/birthday-cake.png";
 
 import "../css/HomePage.css";
 
@@ -20,9 +21,10 @@ function formatDate(dateString) {
   return `${year}-${month}-${day}`;
 }
 
-export default function HomePage({ user }) {
+export default function HomePage({ user, setUser }) {
   const apiService = new ApiService("http://localhost:2024/api");
   const [date, setDate] = useState(new Date());
+  const [types, setTypes] = useState([]);
   const [closestBirthdayPerson, setClosestBirthdayPerson] = useState(null);
   const [closestNamedayPerson, setClosestNamedayPerson] = useState(null);
 
@@ -62,11 +64,12 @@ export default function HomePage({ user }) {
       fetchEvents();
       setInterval(fetchEvents, 24 * 60 * 60 * 1000); 
     }, msUntilMidnight);
-
+console.log(types);
     return () => {
       clearTimeout(timeoutId);
     };
-  }, []);
+    
+  }, [user,types]);
 
   return (
     <div className="app-container">
@@ -74,7 +77,7 @@ export default function HomePage({ user }) {
         <div className="upozorneni">
           {closestBirthdayPerson && (
             <div>
-              <h2>Nejbližší narozeniny má&nbsp;</h2>
+              <img className='icon' alt="Narozeniny" src={cake}/>
               <h2>{closestBirthdayPerson["firstName"]}&nbsp;</h2>
               <h2>{closestBirthdayPerson["lastName"]}&nbsp;</h2>
               <h2>
@@ -90,7 +93,7 @@ export default function HomePage({ user }) {
           )}
           {closestNamedayPerson && (
             <div>
-              <h2>Nejbližší svátek má&nbsp;</h2>
+              <img className='icon' alt="Narozeniny" src={cake}/>
               <h2>{closestNamedayPerson["firstName"]}&nbsp;</h2>
               <h2>{closestNamedayPerson["lastName"]}&nbsp;</h2>
               <h2>
@@ -107,11 +110,11 @@ export default function HomePage({ user }) {
         </div>
         <Calendar className="block_clanedar" onChange={setDate} value={date} user={user}/>
         <PersonList user={user} />
-        <TaskList user={user} date={formatDate(date.toString()) }/>
-        <TaskTypeList user={user} />
+        <TaskList user={user} date={formatDate(date.toString())} types={types}/>
+        <TaskTypeList user={user} setTypesGlobal={setTypes} />
       </main>
       <aside>
-        <Profile />
+        <Logout setUser={setUser}/>
       </aside>
       <footer>{/* Footer content */}</footer>
     </div>

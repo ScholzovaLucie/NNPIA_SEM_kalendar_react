@@ -5,8 +5,6 @@ function TaskItem({ event, onEdit, onDelete } ){
         <div className="actions">
         <button onClick={() => onEdit(event['id'])} className="action-button edit">Editovat</button>
           <button onClick={() => onDelete(event['id'])} className="action-button delete">Smazat</button>
-          <svg className="action-icon" /* svg path */></svg>
-          <svg className="action-icon" /* svg path */></svg>
         </div>
       </div>
     );

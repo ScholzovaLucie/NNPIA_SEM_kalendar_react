@@ -3,15 +3,24 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'// Impo
 import "../css/App.css";
 import Login from "./Auth/Login";
 import HomePage from "./HomePage";
+import Profile from "./Profile/Profile"
+import bcrypt from "bcryptjs-react";
 
 function App() {
   const [user, setUser] = useState(null);
+  var salt = bcrypt.genSaltSync(10);
 
-
-  if(!user) {
-    return <Login setUser={setUser} />
+  function hash(key) {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash += key.charCodeAt(i);
+    }
+    return hash;
   }
 
+  if(!user) {
+    return <Login setUser={setUser} hash={hash} />
+  }
 
   return (
     <div className="app-container">
@@ -20,9 +29,9 @@ function App() {
       </header>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage user={user}/>}>
+          <Route path="/" element={<HomePage user={user} setUser={setUser} salt={salt}/>}>
           </Route>
-          <Route path="/userInfo">
+          <Route path="/profile" element={<Profile/>}>
           </Route>
         </Routes>
       </Router>

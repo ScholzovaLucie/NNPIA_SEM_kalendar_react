@@ -1,40 +1,33 @@
 import React, { useState } from 'react';
-import '../../css/Register.css'; // Importujeme styly
+import '../../css/Register.css';
+import ApiService from './../ApiService';
+import bcrypt from "bcryptjs-react";
 
-function Registration() {
+function Registration({ setUser, hash }) {
+  const apiService = new ApiService('http://localhost:2024/api');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordFirst, setPasswordFirst] = useState('');
+  const [passwordSecond, setPasswordSecond] = useState('');
   const [lastname, setLastname] = useState('');
   const [firstname, setFirstname] = useState('');
-  const [email, setEmail] = useState('');
-  const [user, setUser] = useState(null);
-
-  const token = `user:heslo`;
-  var basicAuth = Buffer.from(token).toString("base64");
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Basic " + basicAuth,
-    },
-    body:{
-      username: username,
-      password: password,
-      email: email,
-      firstname: firstname,
-      lastname: lastname,
-    }
-  };
+  const [error, setError] = useState('');
 
   const handleRegistration = async () => {
-    await fetch("https://localhost:2024/api/createUser", requestOptions)
-    .then((response) => {
-      setUser(response.data);
-      console.log("response.data");
-      console.log(response.data);
+    apiService.put('createUser', { 
+      username: username, 
+      password: hash(password) ,
+      firstName: firstname,
+      lastName: lastname,
+      
+    })
+    .then((data) => {
+      setUser(data);
+      setError('');
     })
     .catch((error) => {
       console.error(error);
+      setError('Chyba při vytváření');
     });
   };
 
@@ -43,9 +36,19 @@ function Registration() {
       <h2>Registrace</h2>
       <input type="text" placeholder="Firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
       <input type="text" placeholder="Lastname"  value={lastname} onChange={(e) => setLastname(e.target.value)}/>
-      <input type="email" placeholder="Email"  value={email} onChange={(e) => setEmail(e.target.value)}/>
       <input type="text" placeholder="Userame" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Heslo" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input type="password" placeholder="Heslo" value={passwordFirst} onChange={(e) => setPasswordFirst(e.target.value)} />
+      <input type="password" placeholder="Heslo znovu" value={passwordSecond} onChange={(e) => {
+        setPasswordSecond(e.target.value);
+        if(passwordFirst===e.target.value) {
+          setPassword(e.target.value);
+          setError('');
+        }
+        else{
+          setError('Hesla se nenschodují');
+        }
+        }} />
+        <div className='errorHandler'>{error}</div>
       <button className='loginbutton' onClick={handleRegistration}>Registrovat</button>
     </div>
   );
