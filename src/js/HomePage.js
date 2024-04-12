@@ -3,12 +3,13 @@ import "../css/App.css";
 import PersonList from "./PersonList/PersonList";
 import Profile from "./Profile/Profile";
 import TaskList from "./TaskList/TaskList";
-import TaskTypeList from "./TaskList/TaskTypeList";
+import TaskTypeList from "./TaskList/TaskTyp/TaskTypeList";
 import Logout from "./Auth/Logout";
 import ApiService from "./ApiService";
 import cake from "./../img/birthday-cake.png";
 import kalendar from "./../img/icons8-calendar-64.png";
 import "../css/HomePage.css";
+import { useError } from "./ErrorProvider";
 
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -23,7 +24,6 @@ function formatDate(dateString) {
 }
 
 export default function HomePage({ user, setUser }) {
-  const apiService = new ApiService("http://localhost:2024/api");
   const [date, setDate] = useState(new Date());
   const [types, setTypes] = useState([]);
   const [closestBirthdayPerson, setClosestBirthdayPerson] = useState(null);
@@ -34,6 +34,8 @@ export default function HomePage({ user, setUser }) {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      const apiService = new ApiService("http://localhost:2024/api");
+
       await apiService
         .get("getClosestBirthday", { username: user["username"] })
         .then((data) => {
@@ -42,7 +44,6 @@ export default function HomePage({ user, setUser }) {
         })
         .catch((error) => {
           setClosestBirthdayPerson(null);
-          setError(error);
         });
 
       await apiService
@@ -53,12 +54,12 @@ export default function HomePage({ user, setUser }) {
         })
         .catch((error) => {
           setClosestNamedayPerson(null);
-          setError(error);
         });
     };
 
-    fetchEvents();
-  }, [user, persons]);
+      fetchEvents();
+
+  }, [user, persons, setError]);
 
   useEffect(() => {
     console.log(error);
@@ -113,7 +114,7 @@ export default function HomePage({ user, setUser }) {
               (event) => event.date === dateString
             );
             return view === "month" && eventForDay ? (
-              <span class="dot"></span>
+              <span className="dot"></span>
             ) : null;
           }}
         />
@@ -136,10 +137,10 @@ export default function HomePage({ user, setUser }) {
         />
       </main>
       <aside>
-      <Profile user={user} />
+        <Profile user={user} />
         <Logout setUser={setUser} />
       </aside>
-      {error && <div className="errorHandler">{error}</div>}
+      {error && <pre className="errorHandler">{error.toString()}</pre>}
     </div>
   );
 }

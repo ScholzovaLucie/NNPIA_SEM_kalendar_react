@@ -17,8 +17,8 @@
 }
 
 .person-item {
-  background-color: #00509D; /* Tmavě modrá */
-  color: #FDC500; /* Žlutá */
+  background-color: #00509D;
+  color: #FDC500;
   padding: 20px;
   margin-bottom: 10px;
   border-radius: 8px;
@@ -29,6 +29,7 @@
   transition: transform 0.2s ease-in-out;
   width: 100%;
   gap: 10px;
+  cursor: pointer;
   }
 
   @media only screen and (max-width: 1000px) {
@@ -43,7 +44,7 @@
   
   .person-item:hover {
     transform: translateY(-2px);
-    background-color: #003F88; /* Střední modrá */
+    background-color: #003F88;
   }
   
   .person-item h3 {

@@ -24,7 +24,7 @@ export default function Login({ setUser, hash }) {
   };
 
   const handleLogin = async () => {
-    apiService.get('verifyUser', { username: localUsername, password:hash(password) })
+    await apiService.get('verifyUser', { username: localUsername, password:hash(password) })
     .then((data) => {
       setError("");
       setUser(data);

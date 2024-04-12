@@ -113,8 +113,8 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
       time: formatTime(e["$d"].toString()),
     }));
   };
-  const onDelete = (id) => {
-    apiService
+  const onDelete = async(id) => {
+    await apiService
       .delete("removeTask", { id: id, username: user["username"], date: date })
       .then((data) => {
         setEvents(data);
@@ -130,8 +130,9 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
   );
 
   useEffect(() => {
-    apiService
-      .get("allEvents", {
+   async function callApi(){
+      await apiService
+      .get("allTasks", {
         username: user["username"],
         date: date,
         typeid: setectedTypId || 0,
@@ -143,7 +144,10 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
         setError("");
       })
       .catch((error) => setError("Chyba při načítání dat z API ukolu: " + error));
-  }, [user, date, types]);
+    }
+
+    callApi();
+  }, [user, date, types, setEventsGlobal, setError, setectedTypId]);
 
   return (
     <div className="seznamUkolu">

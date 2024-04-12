@@ -1,6 +1,7 @@
  
   .detail-content {
-    z-index: 1024;
+    visibility: visible;
+    z-index: 500;
     position: absolute;
     overflow: visible;
     background-color: #FDC500;
@@ -28,10 +29,10 @@
 }
 
 .detail-blok h3{
-    color: #003F88;
+    color: #003F88 !important;
 }
 
 .detail-blok p {
-    font-weight: bold;
+  font-weight: bold;
 }
   

@@ -81,8 +81,8 @@ function PersonList({ user, setPersonsGlobal, setError }) {
   };
 
   
-  const onDelete = (id) => {
-    apiService.delete('removePerson', { id: id, username: user['username'] })
+  const onDelete = async (id) => {
+    await apiService.delete('removePerson', { id: id, username: user['username'] })
       .then((data) => {
         setPersons(data);
         setPersonsGlobal(data);
@@ -92,15 +92,20 @@ function PersonList({ user, setPersonsGlobal, setError }) {
   };
 
   useEffect(() => {
-    apiService.get('getAllPersons', { username: user['username'] })
+    async function callApi(){
+      const apiService = new ApiService('http://localhost:2024/api');
+
+      await apiService.get('getAllPersons', { username: user['username'] })
       .then((data) => {
         setPersons(data);
         setPersonsGlobal(data);
         setIsModalOpen(false);
         setError('')
       })
-      .catch(error => setError("Chyba při načítání dat z API:", error));
-  }, [user]); 
+      .catch(error => setError("Chyba při načítání dat z AP person: ", error));
+    }
+    callApi();
+  }, [ user, setError, setPersonsGlobal]); 
 
   return (
     <div className='seznamOsob'>

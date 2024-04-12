@@ -108,12 +108,6 @@ justify-content: center;
     gap: 10px;
   }
 
-  .seznamTypu button{
-    width: 30px;
-    height: 30px;
-    margin: 1px;
-  }
-
 
   .seznamTypu .action-button{
     width: 35px;
@@ -135,6 +129,7 @@ justify-content: center;
   margin: 0;
     width: 100%;
     gap: 10px;
+    cursor: pointer;
   }
 
   @media only screen and (max-width: 1000px) {
