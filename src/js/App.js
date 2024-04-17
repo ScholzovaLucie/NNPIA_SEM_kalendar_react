@@ -4,11 +4,9 @@ import "../css/App.css";
 import Login from "./Auth/Login";
 import HomePage from "./HomePage";
 import Profile from "./Profile/Profile"
-import bcrypt from "bcryptjs-react";
 
 function App() {
   const [user, setUser] = useState(null);
-  var salt = bcrypt.genSaltSync(10);
 
   function hash(key) {
     let hash = 0;
@@ -19,7 +17,7 @@ function App() {
   }
 
   if(!user) {
-    return <Login setUser={setUser} hash={hash} />
+    return <Login setUser={setUser} />
   }
 
   return (
@@ -29,7 +27,7 @@ function App() {
       </header>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage user={user} setUser={setUser} hash={hash}/>}>
+          <Route path="/" element={<HomePage user={user} setUser={setUser}/>}>
           </Route>
           <Route path="/profile" element={<Profile/>}>
           </Route>

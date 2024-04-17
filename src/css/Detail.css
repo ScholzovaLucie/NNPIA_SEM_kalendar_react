@@ -3,6 +3,8 @@
     visibility: visible;
     z-index: 500;
     position: absolute;
+    top: 0;
+    left: 0;
     overflow: visible;
     background-color: #FDC500;
     color: black;
@@ -13,6 +15,9 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    height: 250%;
+    width: 90%;
+    margin-left: 5%;
   }
 .detail-content p {
     margin: 1px;
@@ -30,6 +35,7 @@
 
 .detail-blok h3{
     color: #003F88 !important;
+    margin: 0;
 }
 
 .detail-blok p {

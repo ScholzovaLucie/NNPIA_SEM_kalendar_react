@@ -1,0 +1,42 @@
+
+.item {
+    background-color: #00509D;
+    color: #FDC500;
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    }
+
+    .item h3 {
+      margin: 0;
+      color: #FFD500; /* Světle žlutá */
+    }
+  
+    @media only screen and (max-width: 1000px) {
+      .item {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+  
+      }
+  
+      .item .actions{
+        position: relative;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      
+    }
+  

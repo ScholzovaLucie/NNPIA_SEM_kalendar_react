@@ -1,60 +1,19 @@
 import React, { useState, useEffect } from "react";
-import ApiService from "./../ApiService";
+import ApiService from "../API/ApiService";
 import TaskItem from "./TaskItem";
-import Modal from "./../Modal";
+import Modal from "../Modal/Modal";
 import "../../css/Tasks/TaskList.css";
 import dayjs from "dayjs";
 import { TimePicker } from "antd";
+import {formatDate, formatTime} from "./../utility";
 
-function formatTime(dateString) {
-  const date = new Date(dateString);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const second = date.getSeconds().toString().padStart(2, "0");
-  return `${hours}:${minutes}:${second}`;
-}
-
-function TaskList({ user, date, setError, setEventsGlobal }) {
+function TaskList({ user, date, setError, setEventsGlobal, setDateGlobal }) {
   const apiService = new ApiService("http://localhost:2024/api");
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
   const [newTask, setNewTask] = useState(null);
   const [openNewTask, setOpenNewTask] = useState(null);
-
-  const onEdit = (id) => {
-    const taskToEdit = events.find((event) => event.id === id);
-    setEditingTask({ ...taskToEdit });
-    setIsModalOpen(true);
-  };
-
-  const handleEditChange = (e) => {
-    setEditingTask((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await apiService
-      .put("updateTask", {
-        username: user["username"],
-        id: editingTask["id"],
-        name: editingTask["name"],
-        description: editingTask["description"],
-        date: date,
-        time: editingTask["time"],
-      })
-      .then((data) => {
-        setEvents(data);
-        setEventsGlobal(data);
-        setIsModalOpen(false);
-        setError("");
-      })
-      .catch((error) => setError("Chyba při aktualizaci task:" + error));
-  };
+  const [editingTask, setEditingTask] = useState(null);
 
   const addTask = async () => {
     const newTask = {
@@ -75,7 +34,7 @@ function TaskList({ user, date, setError, setEventsGlobal }) {
       .put("createTask", {
         username: user["username"],
         description: newTask["description"],
-        date: date,
+        date: formatDate(date.toString()),
         time: time,
         name: newTask["name"],
       })
@@ -101,30 +60,13 @@ function TaskList({ user, date, setError, setEventsGlobal }) {
     }));
   };
 
-  const dateEditCange = (e) => {
-    setEditingTask((prevState) => ({
-      ...prevState,
-      time: formatTime(e["$d"].toString()),
-    }));
-  };
-  const onDelete = async(id) => {
-    await apiService
-      .delete("removeTask", { id: id, username: user["username"], date: date })
-      .then((data) => {
-        setEvents(data);
-        setEventsGlobal(data);
-        setError("");
-      })
-      .catch((error) => setError("Chyba při mazání ukolu: " + error));
-  };
-
 
   useEffect(() => {
    async function callApi(){
       await apiService
       .get("allTasksByDate", {
         username: user["username"],
-        date: date,
+        date: formatDate(date.toString()),
       })
       .then((data) => {
         setEvents(data);
@@ -136,14 +78,15 @@ function TaskList({ user, date, setError, setEventsGlobal }) {
     }
 
     callApi();
-  }, [user, date, setEventsGlobal, setError]);
+  }, [user, date, setEventsGlobal, setError, setDateGlobal]);
 
   return (
     <div className="seznamUkolu">
       <h2>Seznam úkolů</h2>
       <div className="seznamUkoluBlok">
       {events.map((event) => (
-  <TaskItem key={event.id} event={event} onEdit={onEdit} onDelete={onDelete} />
+    <TaskItem user={user} date={date} setError={setError} event={event} events={events}
+    setEventsGlobal={setEvents}  />
 ))}
       </div>
       <Modal
@@ -154,41 +97,6 @@ function TaskList({ user, date, setError, setEventsGlobal }) {
           setOpenNewTask(false);
         }}
       >
-        {editingTask && (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Název:</label>
-              <input
-                type="text"
-                name="name"
-                value={editingTask["name"] || ""}
-                onChange={handleEditChange}
-              />
-            </div>
-            <div>
-              <label>Popis:</label>
-              <input
-                type="text"
-                name="description"
-                value={editingTask["description"] || ""}
-                onChange={handleEditChange}
-              />
-            </div>
-            <div>
-              <TimePicker
-                defaultValue={dayjs(
-                  editingTask["time"] || formatTime(new Date().toString()),
-                  "HH:mm:ss"
-                )}
-                onChange={dateEditCange}
-              />
-            </div>
-            <button className="loginbutton" type="submit">
-              Uložit změny
-            </button>
-          </form>
-        )}
-
         {openNewTask && (
           <form onSubmit={newTaskSubmit}>
             <div>

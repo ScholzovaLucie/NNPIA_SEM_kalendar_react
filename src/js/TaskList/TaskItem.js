@@ -1,44 +1,83 @@
 import React, { useState } from "react";
 import Detail from "./../Detail";
+import ActionButtons from "./../components/ActionButtons";
+import Modal from "../Modal/Modal";
+import ApiService from "../API/ApiService";
+import {formatTime} from "./../utility";
+import { TimePicker } from "antd";
+import dayjs from "dayjs";
 
-function TaskItem({ event, onEdit, onDelete }) {
+function TaskItem({ user, date, setError, event, setEventsGlobal, events }) {
+  const apiService = new ApiService("http://localhost:2024/api");
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskDatilopen, setTaskDatilopen] = useState(null);
+  const [editingTask, setEditingTask] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onClick = (e) => {
     setSelectedTask(e);
     setTaskDatilopen(true);
   };
 
+  const onDelete = async(id) => {
+    await apiService
+      .delete("removeTask", { id: id, username: user["username"], date: date })
+      .then((data) => {
+        setEventsGlobal(data);
+        setError("");
+      })
+      .catch((error) => setError("Chyba při mazání ukolu: " + error));
+  };
+
+  const dateEditCange = (e) => {
+    setEditingTask((prevState) => ({
+      ...prevState,
+      time: formatTime(e["$d"].toString()),
+    }));
+  };
+
+  
+  const handleEditChange = (e) => {
+    setEditingTask((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await apiService
+      .put("updateTask", {
+        username: user["username"],
+        id: editingTask["id"],
+        name: editingTask["name"],
+        description: editingTask["description"],
+        date: date,
+        time: editingTask["time"],
+      })
+      .then((data) => {
+        setEventsGlobal(data);
+        setIsModalOpen(false);
+        setError("");
+      })
+      .catch((error) => setError("Chyba při aktualizaci task:" + error));
+  };
+
+  const onEdit = (id) => {
+    const taskToEdit = events.find((event) => event.id === id);
+    setEditingTask({ ...taskToEdit });
+    setIsModalOpen(true);
+  };
+
   return (
-    <div id={event.id} className="task-item">
+    <div>
+      <div id={event.id} className="item">
       <h3>
         {event["name"]} {event["time"]}
       </h3>
-      <div className="actions">
-        <button
-          onClick={() => onEdit(event["id"])}
-          className="action-button edit"
-        >
-          Editovat
-        </button>
-        <button
-          onClick={() => onDelete(event["id"])}
-          className="action-button delete"
-        >
-          Smazat
-        </button>
-        <button onClick={() => onClick(event)} className="action-button info">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            viewBox="0 0 128 128"
-          >
-            <path d="M 64 6 C 32 6 6 32 6 64 C 6 96 32 122 64 122 C 96 122 122 96 122 64 C 122 32 96 6 64 6 z M 64 12 C 92.7 12 116 35.3 116 64 C 116 92.7 92.7 116 64 116 C 35.3 116 12 92.7 12 64 C 12 35.3 35.3 12 64 12 z M 64 30 A 9 9 0 0 0 64 48 A 9 9 0 0 0 64 30 z M 64 59 C 59 59 55 63 55 68 L 55 92 C 55 97 59 101 64 101 C 69 101 73 97 73 92 L 73 68 C 73 63 69 59 64 59 z"></path>
-          </svg>
-        </button>
-      </div>
+      <ActionButtons onEdit={onEdit} onClick={onClick} onDelete={onDelete} data={event}/>
+    
       {taskDatilopen && (
         <Detail
           isOpen={setTaskDatilopen}
@@ -54,6 +93,50 @@ function TaskItem({ event, onEdit, onDelete }) {
         />
       )}
     </div>
+    <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingTask(null);
+        }}
+      >
+        {editingTask && (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Název:</label>
+              <input
+                type="text"
+                name="name"
+                value={editingTask["name"] || ""}
+                onChange={handleEditChange}
+              />
+            </div>
+            <div>
+              <label>Popis:</label>
+              <input
+                type="text"
+                name="description"
+                value={editingTask["description"] || ""}
+                onChange={handleEditChange}
+              />
+            </div>
+            <div>
+              <TimePicker
+                defaultValue={dayjs(
+                  editingTask["time"] || formatTime(new Date().toString()),
+                  "HH:mm:ss"
+                )}
+                onChange={dateEditCange}
+              />
+            </div>
+            <button className="loginbutton" type="submit">
+              Uložit změny
+            </button>
+          </form>
+        )}
+      </Modal>
+    </div>
+    
   );
 }
 

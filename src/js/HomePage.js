@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "../css/App.css";
 import PersonList from "./PersonList/PersonList";
+import CustomCalendar from "./components/CustomCalendar";
 import Profile from "./Profile/Profile";
 import TaskList from "./TaskList/TaskList";
-import Logout from "./Auth/Logout";
-import ApiService from "./ApiService";
+import ApiService from "./API/ApiService";
 import cake from "./../img/birthday-cake.png";
 import kalendar from "./../img/icons8-calendar-64.png";
 import "../css/HomePage.css";
-import { useError } from "./ErrorProvider";
+import "../css/components/ActionButtons.css"
+import "../css/components/Item.css"
 
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-export default function HomePage({ user, setUser, hash }) {
+export default function HomePage({ user, setUser }) {
   const [date, setDate] = useState(new Date());
   const [closestBirthdayPerson, setClosestBirthdayPerson] = useState(null);
   const [closestNamedayPerson, setClosestNamedayPerson] = useState(null);
@@ -67,31 +56,12 @@ export default function HomePage({ user, setUser, hash }) {
 
       fetchEvents();
 
-  }, [user, persons, setError]);
+  }, [user, persons, setError, date, setPersons]);
 
   useEffect(() => {
-    console.log(error);
     setError(error);
   }, [error]);
 
-function tileContent({ date, view }) {
-  if (view === "month") {
-    const dateString = date.toISOString().split('T')[0];
-    var dayEvents = allEvents.filter(event => event.date === dateString);
-    if(dayEvents.length > 0)
-    {
-      return (
-        <div className="dayEventsBlock">
-           {dayEvents.map((event) => (
-          <div key={event.name} className="dot"></div>
-        ))}
-        </div>
-      );
-      
-    }  
-  }
-  
-}
 
   return (
     <div className="app-container">
@@ -130,12 +100,10 @@ function tileContent({ date, view }) {
             </div>
           )}
         </div>
-        <Calendar
-          className="block_clanedar"
-          onChange={setDate}
-          value={date}
-          user={user}
-          tileContent={tileContent}
+        <CustomCalendar
+          setDateGlobal={setDate}
+          allEvents={allEvents}
+          dateGLobal={date}
         />
         <PersonList
           user={user}
@@ -144,14 +112,14 @@ function tileContent({ date, view }) {
         />
         <TaskList
           user={user}
-          date={formatDate(date.toString())}
+          date={date}
           setError={setError}
           setEventsGlobal={setEvents}
+          setDateGlobal={setDate}
         />
       </main>
       <aside>
-        <Profile user={user} setUser={setUser} hash={hash}/>
-        <Logout setUser={setUser} />
+        <Profile user={user} setUser={setUser}/>
       </aside>
       {error && <pre className="errorHandler">{error.toString()}</pre>}
     </div>

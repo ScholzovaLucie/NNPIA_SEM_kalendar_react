@@ -1,0 +1,1 @@
+export const customSalt = '$2a$10$ftdrUwCu64A92cb2t39X';

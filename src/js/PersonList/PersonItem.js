@@ -1,43 +1,72 @@
 import React, { useState } from "react";
 import Detail from "./../Detail";
+import ActionButtons from "./../components/ActionButtons";
+import ApiService from './../API/ApiService';
+import Modal from './../Modal/Modal';
+import "../../css/Person/PersonList.css";
 
-function PersonItem({ person, onEdit, onDelete }) {
+function PersonItem({ user, person, persons, setPersons, setPersonsGlobal, setError }) {
+  const apiService = new ApiService('http://localhost:2024/api');
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [personDatilopen, setPersonDatilopen] = useState(null);
+  const [editingPerson, setEditingPerson] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onClick = (e) => {
     setSelectedPerson(e);
     setPersonDatilopen(true);
   };
+
+  const onEdit = (id) => {
+    const personToEdit = persons.find(person => person.id === id);
+    setEditingPerson({ ...personToEdit });
+    setIsModalOpen(true);
+  };
+
+  const onDelete = async (id) => {
+    await apiService.delete('removePerson', { id: id, username: user['username'] })
+      .then((data) => {
+        setPersons(data);
+        setPersonsGlobal(data);
+        setError('')
+      })
+      .catch(error => setError("Chyba při mazání osoby:", error));
+  };
+
+  const handleEditChange = (e) => {
+    setEditingPerson(prevState => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await apiService.put('updatePerson', {
+        username: user['username'],
+        id: editingPerson['id'],
+        firstName: editingPerson['firstName'],
+        lastName: editingPerson['lastName'],
+        birthday: editingPerson['birthday']
+      }).then((data) => {
+        setPersons(data);
+        setPersonsGlobal(data);
+        setIsModalOpen(false);
+        setError('')
+          })
+          .catch(error =>  setError("Chyba při aktualizaci osoby:", error));
+  };
+
+
+  
   return (
-    <div className="person-item">
+    <div >
+      <div className="item">
       <h3>
         {person["firstName"]} {person["lastName"]}
       </h3>
-      <div className="actions">
-        <button
-          onClick={() => onEdit(person["id"])}
-          className="action-button edit"
-        >
-          Editovat
-        </button>
-        <button
-          onClick={() => onDelete(person["id"])}
-          className="action-button delete"
-        >
-          Smazat
-        </button>
-        <button onClick={() => onClick(person)} className="action-button info">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            viewBox="0 0 128 128"
-          >
-            <path d="M 64 6 C 32 6 6 32 6 64 C 6 96 32 122 64 122 C 96 122 122 96 122 64 C 122 32 96 6 64 6 z M 64 12 C 92.7 12 116 35.3 116 64 C 116 92.7 92.7 116 64 116 C 35.3 116 12 92.7 12 64 C 12 35.3 35.3 12 64 12 z M 64 30 A 9 9 0 0 0 64 48 A 9 9 0 0 0 64 30 z M 64 59 C 59 59 55 63 55 68 L 55 92 C 55 97 59 101 64 101 C 69 101 73 97 73 92 L 73 68 C 73 63 69 59 64 59 z"></path>
-          </svg>
-        </button>
-      </div>
+      <ActionButtons onEdit={onEdit} onClick={onClick} onDelete={onDelete} data={person}/>
+      
       {personDatilopen && (
         <Detail
           isOpen={setPersonDatilopen}
@@ -53,6 +82,32 @@ function PersonItem({ person, onEdit, onDelete }) {
         />
       )}
     </div>
+    
+      <Modal isOpen={isModalOpen} onClose={() => {
+        setIsModalOpen(false)
+        setEditingPerson(null)
+       }
+        }>
+        {editingPerson && (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Jméno:</label>
+              <input type="text" name="firstName" value={editingPerson['firstName'] || ''} onChange={handleEditChange} />
+            </div>
+            <div>
+              <label>Příjmení:</label>
+              <input type="text" name="lastName" value={editingPerson['lastName'] || ''} onChange={handleEditChange} />
+            </div>
+            <div>
+              <label>Datum narození:</label>
+              <input type="date" name="birthday" value={editingPerson['birthday'] || ''} onChange={handleEditChange} />
+            </div>
+            <button className="loginbutton" type="submit">Uložit změny</button>
+          </form>
+        )}
+      </Modal>
+    </div>
+    
   );
 }
 

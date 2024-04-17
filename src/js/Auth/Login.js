@@ -5,9 +5,10 @@ import Registration from "./Register";
 import time from "./../../img/time.png";
 import pc from "./../../img/pc.png";
 import PropTypes from 'prop-types';
-import ApiService from './../ApiService';
+import ApiService from './../API/ApiService';
+import {comparePassword, hashPassword} from "./../utility";
 
-export default function Login({ setUser, hash }) {
+export default function Login({ setUser }) {
   const [localUsername, setlocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +25,9 @@ export default function Login({ setUser, hash }) {
   };
 
   const handleLogin = async () => {
-    await apiService.get('verifyUser', { username: localUsername, password:hash(password) })
+    hashPassword(password).then(hash => {
+      console.log(hash)
+      apiService.get('verifyUser', { username: localUsername, password: hash })
     .then((data) => {
       setError("");
       setUser(data);
@@ -33,7 +36,7 @@ export default function Login({ setUser, hash }) {
       setError("Uživatel nenalezen");
       console.error(error);
     });
-   
+    });   
   };
 
   return (
@@ -57,7 +60,7 @@ export default function Login({ setUser, hash }) {
           <div className="errorHandler">{error}</div>
           <button className="loginbutton" onClick={handleLogin}>Přihlásit</button>
         </div>
-        <Registration setUser={setUser} hash={hash}/>
+        <Registration setUser={setUser}/>
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">

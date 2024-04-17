@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "../../css/Register.css";
-import ApiService from "./../ApiService";
+import ApiService from "./../API/ApiService";
+import { comparePassword, hashPassword } from "./../utility";
 
-function Registration({ setUser, hash }) {
+function Registration({ setUser }) {
   const apiService = new ApiService("http://localhost:2024/api");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,10 +15,11 @@ function Registration({ setUser, hash }) {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
 
   const handleRegistration = async () => {
-    await apiService
+    hashPassword(password).then(hash => {
+      apiService
       .put("createUser", {
         username: username,
-        password: hash(password),
+        password: hash,
         firstName: firstname,
         lastName: lastname,
       })
@@ -29,6 +31,7 @@ function Registration({ setUser, hash }) {
         console.error(error);
         setError("Chyba při vytváření");
       });
+    });
   };
 
   return (
@@ -62,10 +65,11 @@ function Registration({ setUser, hash }) {
         type="password"
         placeholder="Heslo znovu"
         value={passwordSecond}
-        onChange={(e) => {
+        onChange={async (e) => {
+          // Přidání async pro správné ošetření asynchronní funkce
           const newPasswordSecond = e.target.value;
           setPasswordSecond(newPasswordSecond);
-          const match = passwordFirst === newPasswordSecond;
+          const match = passwordFirst ===  newPasswordSecond;
           setPasswordsMatch(match);
           if (match) {
             setPassword(newPasswordSecond);
@@ -74,7 +78,7 @@ function Registration({ setUser, hash }) {
             setError("Hesla se neshodují");
           }
         }}
-        style={{ backgroundColor: passwordsMatch ? "inherit" : "red" }} 
+        style={{ backgroundColor: passwordsMatch ? "inherit" : "red" }}
       />
       <div className="errorHandler">{error}</div>
       <button

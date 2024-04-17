@@ -1,48 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PersonItem from './PersonItem'; 
-import ApiService from './../ApiService';
-import Modal from './../Modal';
+import ApiService from './../API/ApiService';
+import Modal from './../Modal/Modal';
 import "../../css/Person/PersonList.css";
 
 function PersonList({ user, setPersonsGlobal, setError }) {
-    const apiService = new ApiService('http://localhost:2024/api');
+  const apiService = new ApiService('http://localhost:2024/api');
   const [persons, setPersons] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingPerson, setEditingPerson] = useState(null);
   const [newPerson, setNewPerson] = useState(null);
   const [openNewPerson, setOpenNewPerson] = useState(null);
-  
-  const onEdit = (id) => {
-    const personToEdit = persons.find(person => person.id === id);
-    setEditingPerson({ ...personToEdit });
-    setIsModalOpen(true);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleEditChange = (e) => {
-    setEditingPerson(prevState => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await apiService.put('updatePerson', {
-        username: user['username'],
-        id: editingPerson['id'],
-        firstName: editingPerson['firstName'],
-        lastName: editingPerson['lastName'],
-        birthday: editingPerson['birthday']
-      }).then((data) => {
-        setPersons(data);
-        setPersonsGlobal(data);
-        setIsModalOpen(false);
-        setError('')
-          })
-          .catch(error =>  setError("Chyba při aktualizaci osoby:", error));
-            
-
-  };
   const addPerson = async () => {
     const newPerson = { 
         firstName:"",
@@ -80,16 +49,6 @@ function PersonList({ user, setPersonsGlobal, setError }) {
     }));
   };
 
-  
-  const onDelete = async (id) => {
-    await apiService.delete('removePerson', { id: id, username: user['username'] })
-      .then((data) => {
-        setPersons(data);
-        setPersonsGlobal(data);
-        setError('')
-      })
-      .catch(error => setError("Chyba při mazání osoby:", error));
-  };
 
   useEffect(() => {
     async function callApi(){
@@ -113,34 +72,19 @@ function PersonList({ user, setPersonsGlobal, setError }) {
       <div className='seznamOsobBlok'>
         {persons.map(person => (
         <PersonItem person={person} 
-                    onEdit={onEdit} 
-                    onDelete={onDelete} />
+                    persons={persons}
+                    user={user}
+                    setPersons={setPersons}
+                    setPersonsGlobal={setPersonsGlobal}
+                    setError={setError} />
       ))}
       </div>
        <Modal isOpen={isModalOpen} onClose={() => {
         setIsModalOpen(false)
-        setEditingPerson(null)
         setOpenNewPerson(false)
        }
         }>
-        {editingPerson && (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Jméno:</label>
-              <input type="text" name="firstName" value={editingPerson['firstName'] || ''} onChange={handleEditChange} />
-            </div>
-            <div>
-              <label>Příjmení:</label>
-              <input type="text" name="lastName" value={editingPerson['lastName'] || ''} onChange={handleEditChange} />
-            </div>
-            <div>
-              <label>Datum narození:</label>
-              <input type="date" name="birthday" value={editingPerson['birthday'] || ''} onChange={handleEditChange} />
-            </div>
-            <button className="loginbutton" type="submit">Uložit změny</button>
-          </form>
-        )}
-
+       
 {openNewPerson && (
           <form onSubmit={newPersonSubmit}>
             <div>
