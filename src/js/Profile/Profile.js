@@ -1,10 +1,110 @@
 import "../../css/Profil/Profil.css";
+import Modal from "./../Modal";
+import React, { useState, useEffect } from "react";
+import ApiService from "./../ApiService";
 
-function Profile({user}){
+function Profile({user, setUser, hash}){
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingPerson, setEditingPerson] = useState(null);
+    const apiService = new ApiService('http://localhost:2024/api');
+    const [username, setUsername] = useState(user.username);
+    const [password, setPassword] = useState(user.password);
+    const [passwordFirst, setPasswordFirst] = useState(user.password);
+    const [passwordSecond, setPasswordSecond] = useState(user.password);
+    const [lastname, setLastname] = useState(user.lastName);
+    const [firstname, setFirstname] = useState(user.firstName);
+    const [error, setError] = useState("");
+    const [passwordsMatch, setPasswordsMatch] = useState(false);
+    
+    const onEdit = (id) => {
+        setEditingPerson({ ...user });
+        setIsModalOpen(true);
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        await apiService.put('updateUser', {
+          username: user.username,
+          newusername: username,
+          password: hash(password),
+          firstName: firstname,
+          lastName: lastname,
+          }).then((data) => {
+            setUser(data);
+            setIsModalOpen(false);
+            setError('')
+              })
+              .catch(error =>  setError("Chyba při aktualizaci uživatele:", error));
+      };
+
     return(
-        <div className="profil">
-            <h2>{user.firstName}</h2>
-            <h2>{user.lastName}</h2>
+        <div className="profil" onClick={onEdit}>
+            <ul>
+                <li> <h2>{user.firstName}</h2></li>
+                <li><h2>{user.lastName}</h2></li>
+            </ul>
+            <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingPerson(null);
+        }}
+      >
+        {editingPerson && (
+          <form onSubmit={handleSubmit}>
+            <label>Jméno:</label>
+            <input
+        type="text"
+        placeholder={user.firstName}
+        value={firstname}
+        onChange={(e) => setFirstname(e.target.value)}
+      />
+      <label>Příjmení:</label>
+      <input
+        type="text"
+        placeholder={user.lastName}
+        value={lastname}
+        onChange={(e) => setLastname(e.target.value)}
+      />
+      <label>Uživatelské jméno:</label>
+      <input
+        type="text"
+        placeholder={user.username}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <label>Heslo:</label>
+      <input
+        type="password"
+        placeholder="Heslo"
+        value={passwordFirst}
+        onChange={(e) => setPasswordFirst(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Heslo znovu"
+        value={passwordSecond}
+        onChange={(e) => {
+          const newPasswordSecond = e.target.value;
+          setPasswordSecond(newPasswordSecond);
+          const match = passwordFirst === newPasswordSecond;
+          setPasswordsMatch(match);
+          if (match) {
+            setPassword(newPasswordSecond);
+            setError("");
+          } else {
+            setError("Hesla se neshodují");
+          }
+        }}
+        style={{ backgroundColor: passwordsMatch ? "inherit" : "red" }} 
+      />
+           <div className="errorHandler">{error}</div> 
+            <button className="loginbutton" type="submit">
+              Uložit změny
+            </button>
+          </form>
+        )}
+      </Modal>
         </div>
     );
 }

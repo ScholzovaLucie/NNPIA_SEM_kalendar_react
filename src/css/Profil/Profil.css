@@ -1,6 +1,28 @@
 .profil{
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 5px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50% ;
+    background-color: transparent;
+    color: #FFD500;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.6s ease;
+}
+
+.profil ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.profil:hover {
+    background-color: #00509D;
+    box-shadow: #00509D;
 }
 
 .profil h2 {

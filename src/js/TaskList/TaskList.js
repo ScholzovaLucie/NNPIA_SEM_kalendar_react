@@ -5,7 +5,6 @@ import Modal from "./../Modal";
 import "../../css/Tasks/TaskList.css";
 import dayjs from "dayjs";
 import { TimePicker } from "antd";
-import ControllableStates from "./ControllableStates";
 
 function formatTime(dateString) {
   const date = new Date(dateString);
@@ -15,15 +14,13 @@ function formatTime(dateString) {
   return `${hours}:${minutes}:${second}`;
 }
 
-function TaskList({ user, date, types, setError, setEventsGlobal }) {
+function TaskList({ user, date, setError, setEventsGlobal }) {
   const apiService = new ApiService("http://localhost:2024/api");
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [newTask, setNewTask] = useState(null);
   const [openNewTask, setOpenNewTask] = useState(null);
-  const [type, setType] = useState(null);
-  const [setectedTypId, setSetectedTypId] = useState(null);
 
   const onEdit = (id) => {
     const taskToEdit = events.find((event) => event.id === id);
@@ -48,7 +45,6 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
         name: editingTask["name"],
         description: editingTask["description"],
         date: date,
-        typeid: type["id"],
         time: editingTask["time"],
       })
       .then((data) => {
@@ -65,7 +61,6 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
       name: "",
       description: "",
       time: "",
-      typeid: "",
     };
     setNewTask(newTask);
     setOpenNewTask(true);
@@ -83,7 +78,6 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
         date: date,
         time: time,
         name: newTask["name"],
-        typeid: type["id"],
       })
       .then((data) => {
         setEvents(data);
@@ -124,18 +118,13 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
       .catch((error) => setError("Chyba při mazání ukolu: " + error));
   };
 
-  const selectedValues = React.useMemo(
-    () => types.filter((v) => v.selected),
-    [types]
-  );
 
   useEffect(() => {
    async function callApi(){
       await apiService
-      .get("allTasks", {
+      .get("allTasksByDate", {
         username: user["username"],
         date: date,
-        typeid: setectedTypId || 0,
       })
       .then((data) => {
         setEvents(data);
@@ -147,7 +136,7 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
     }
 
     callApi();
-  }, [user, date, types, setEventsGlobal, setError, setectedTypId]);
+  }, [user, date, setEventsGlobal, setError]);
 
   return (
     <div className="seznamUkolu">
@@ -186,16 +175,6 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
               />
             </div>
             <div>
-              <label>Typ:</label>
-              <ControllableStates
-                multiple
-                value={selectedValues}
-                options={types}
-                label={"Typ"}
-                setValueGlobal={setType}
-              />
-            </div>
-            <div>
               <TimePicker
                 defaultValue={dayjs(
                   editingTask["time"] || formatTime(new Date().toString()),
@@ -228,16 +207,6 @@ function TaskList({ user, date, types, setError, setEventsGlobal }) {
                 name="description"
                 value={newTask["description"] || ""}
                 onChange={handleNewChange}
-              />
-            </div>
-            <div>
-              <label>Typ:</label>
-              <ControllableStates
-                multiple
-                value={selectedValues}
-                options={types}
-                label={"Typ"}
-                setValueGlobal={setType}
               />
             </div>
             <div>

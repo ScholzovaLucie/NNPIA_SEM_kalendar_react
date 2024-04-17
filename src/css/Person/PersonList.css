@@ -40,11 +40,14 @@
       text-align: center;
 
     }
-  }
-  
-  .person-item:hover {
-    transform: translateY(-2px);
-    background-color: #003F88;
+
+    .person-item .actions{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
   }
   
   .person-item h3 {

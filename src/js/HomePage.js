@@ -3,7 +3,6 @@ import "../css/App.css";
 import PersonList from "./PersonList/PersonList";
 import Profile from "./Profile/Profile";
 import TaskList from "./TaskList/TaskList";
-import TaskTypeList from "./TaskList/TaskTyp/TaskTypeList";
 import Logout from "./Auth/Logout";
 import ApiService from "./ApiService";
 import cake from "./../img/birthday-cake.png";
@@ -23,14 +22,14 @@ function formatDate(dateString) {
   return `${year}-${month}-${day}`;
 }
 
-export default function HomePage({ user, setUser }) {
+export default function HomePage({ user, setUser, hash }) {
   const [date, setDate] = useState(new Date());
-  const [types, setTypes] = useState([]);
   const [closestBirthdayPerson, setClosestBirthdayPerson] = useState(null);
   const [closestNamedayPerson, setClosestNamedayPerson] = useState(null);
   const [persons, setPersons] = useState([]);
   const [error, setError] = useState("");
   const [events, setEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -55,6 +54,15 @@ export default function HomePage({ user, setUser }) {
         .catch((error) => {
           setClosestNamedayPerson(null);
         });
+
+        await apiService.get("getAllTasks", {username: user["username"]})
+        .then((data) => {
+          setAllEvents(data);
+          setError("");
+        })
+        .catch((error) => {
+          setAllEvents([]);
+        });
     };
 
       fetchEvents();
@@ -65,6 +73,25 @@ export default function HomePage({ user, setUser }) {
     console.log(error);
     setError(error);
   }, [error]);
+
+function tileContent({ date, view }) {
+  if (view === "month") {
+    const dateString = date.toISOString().split('T')[0];
+    var dayEvents = allEvents.filter(event => event.date === dateString);
+    if(dayEvents.length > 0)
+    {
+      return (
+        <div className="dayEventsBlock">
+           {dayEvents.map((event) => (
+          <div key={event.name} className="dot"></div>
+        ))}
+        </div>
+      );
+      
+    }  
+  }
+  
+}
 
   return (
     <div className="app-container">
@@ -108,15 +135,7 @@ export default function HomePage({ user, setUser }) {
           onChange={setDate}
           value={date}
           user={user}
-          tileContent={({ date, view }) => {
-            const dateString = formatDate(date.toString());
-            const eventForDay = events.find(
-              (event) => event.date === dateString
-            );
-            return view === "month" && eventForDay ? (
-              <span className="dot"></span>
-            ) : null;
-          }}
+          tileContent={tileContent}
         />
         <PersonList
           user={user}
@@ -126,18 +145,12 @@ export default function HomePage({ user, setUser }) {
         <TaskList
           user={user}
           date={formatDate(date.toString())}
-          types={types}
           setError={setError}
           setEventsGlobal={setEvents}
         />
-        <TaskTypeList
-          user={user}
-          setTypesGlobal={setTypes}
-          setError={setError}
-        />
       </main>
       <aside>
-        <Profile user={user} />
+        <Profile user={user} setUser={setUser} hash={hash}/>
         <Logout setUser={setUser} />
       </aside>
       {error && <pre className="errorHandler">{error.toString()}</pre>}

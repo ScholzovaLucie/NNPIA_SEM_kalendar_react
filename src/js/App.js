@@ -29,7 +29,7 @@ function App() {
       </header>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage user={user} setUser={setUser} salt={salt}/>}>
+          <Route path="/" element={<HomePage user={user} setUser={setUser} hash={hash}/>}>
           </Route>
           <Route path="/profile" element={<Profile/>}>
           </Route>

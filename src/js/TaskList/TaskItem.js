@@ -48,7 +48,6 @@ function TaskItem({ event, onEdit, onDelete }) {
           data={[
             ["Název", selectedTask["name"]],
             ["Popis", selectedTask["description"]],
-            ["Typ", selectedTask["typ"]["name"]],
             ["Datum", selectedTask["date"]],
             ["Čas", selectedTask["time"]],
           ]}
