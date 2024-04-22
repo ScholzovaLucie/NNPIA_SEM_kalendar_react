@@ -36,4 +36,19 @@
     flex-direction: column;
     justify-content: space-between;
   }
+
+  @media (max-width: 768px) {
+    .seznamUkolu{
+      grid-row: 4;
+      grid-column: 1;
+      display: grid;
+      grid-template-columns: 20% 60% 20%;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      height: 80%;
+      width: 100%;
+      gap: 5px;
+  }
+  }
   

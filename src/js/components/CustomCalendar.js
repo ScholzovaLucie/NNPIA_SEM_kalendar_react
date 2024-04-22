@@ -2,7 +2,7 @@
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-function CustomCalendar ({ setDateGlobal, allEvents, dateGLobal }) {
+function CustomCalendar ({ setDateGlobal, allEvents, dateGLobal, persons }) {
   
     const onChange = (newValue) => {
         setDateGlobal(newValue);
@@ -17,15 +17,31 @@ function CustomCalendar ({ setDateGlobal, allEvents, dateGLobal }) {
             const dateString = `${year}-${month}-${day}`;
     
             var dayEvents = allEvents.filter(event => event.date === dateString);
+            var birthday = persons.filter(event => event.birthday === dateString);
+            var holiday = persons.filter(event => event.holiday === dateString);
             if(dayEvents.length > 0){
                 return (
                 <div className="dayEventsBlock">
                     <div key={day} className="event"></div>
                 </div>
             );
-            }
-             
         }
+            if(birthday.length > 0){
+                return (
+                <div className="dayEventsBlock">
+                    <div key={day} className="birthday"></div>
+                </div>
+            );
+            }  
+            if(holiday.length > 0){
+                return (
+                <div className="dayEventsBlock">
+                    <div key={day} className="holiday"></div>
+                </div>
+            );
+            }  
+        } 
+        
     }
   
     return (

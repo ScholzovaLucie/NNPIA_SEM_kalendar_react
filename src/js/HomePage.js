@@ -7,8 +7,6 @@ import TaskList from "./TaskList/TaskList";
 import ApiService from "./API/ApiService";
 import cake from "./../img/birthday-cake.png";
 import kalendar from "./../img/icons8-calendar-64.png";
-import "../css/HomePage.css";
-import "../css/components/ActionButtons.css"
 import "../css/components/Item.css"
 
 export default function HomePage({ user, setUser }) {
@@ -64,15 +62,15 @@ export default function HomePage({ user, setUser }) {
 
 
   return (
-    <div className="app-container">
+    <div className="app-container home">
       <main className="main_kalendar">
         <div className="upozorneni">
           {closestBirthdayPerson && (
             <div>
               <img className="icon" alt="Narozeniny" src={cake} />
-              <h2>{closestBirthdayPerson["firstName"]}&nbsp;</h2>
-              <h2>{closestBirthdayPerson["lastName"]}&nbsp;</h2>
-              <h2>
+              <h2>{closestBirthdayPerson["firstName"]}</h2>
+              <h2>{closestBirthdayPerson["lastName"]}</h2>
+              <h2 className="date">
                 {new Date(closestBirthdayPerson["birthday"]).toLocaleDateString(
                   "cs-CZ",
                   {
@@ -84,11 +82,11 @@ export default function HomePage({ user, setUser }) {
             </div>
           )}
           {closestNamedayPerson && (
-            <div>
+            <div >
               <img className="icon" alt="Svatek" src={kalendar} />
-              <h2>{closestNamedayPerson["firstName"]}&nbsp;</h2>
-              <h2>{closestNamedayPerson["lastName"]}&nbsp;</h2>
-              <h2>
+              <h2>{closestNamedayPerson["firstName"]}</h2>
+              <h2>{closestNamedayPerson["lastName"]}</h2>
+              <h2 className="date">
                 {new Date(closestNamedayPerson["holiday"]).toLocaleDateString(
                   "cs-CZ",
                   {
@@ -104,6 +102,7 @@ export default function HomePage({ user, setUser }) {
           setDateGlobal={setDate}
           allEvents={allEvents}
           dateGLobal={date}
+          persons={persons}
         />
         <PersonList
           user={user}

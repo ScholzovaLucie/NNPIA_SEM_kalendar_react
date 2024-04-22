@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ApiService from "./../API/ApiService";
 import icon from "./../../img/boy.png";
 import Logout from "./../Auth/Logout";
-import { comparePassword, hashPassword } from "./../utility";
+import { hashPassword } from "./../utility";
 
 function Profile({ user, setUser }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

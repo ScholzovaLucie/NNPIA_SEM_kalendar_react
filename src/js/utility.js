@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-import {customSalt} from "./../settings";
 import CryptoJS from "crypto-js";
 
 export const formatTime = (dateString) => {

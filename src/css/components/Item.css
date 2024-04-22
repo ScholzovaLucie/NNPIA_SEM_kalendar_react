@@ -1,42 +1,120 @@
-
 .item {
-    background-color: #00509D;
-    color: #FDC500;
-    padding: 20px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    gap: 10px;
-    cursor: pointer;
-    position: relative;
-    }
+  background-color: #00509D;
+  color: #FDC500;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
 
-    .item h3 {
-      margin: 0;
-      color: #FFD500; /* Světle žlutá */
-    }
-  
-    @media only screen and (max-width: 1000px) {
-      .item {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-  
-      }
-  
-      .item .actions{
-        position: relative;
-        right: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      
-    }
-  
+.item h3 {
+  margin: 0;
+  color: #FFD500;
+}
+
+@media only screen and (max-width: 1500px) {
+  .item {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+  }
+
+  .item .actions {
+      position: relative;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .item {
+      padding: 15px;
+  }
+
+  .actions {
+      width: 100%;
+      gap: 5px;
+  }
+
+  .action-icon {
+      width: 20px;
+      height: 20px;
+  }
+
+  .action-button {
+      padding: 5px 8px;
+  }
+
+  .info {
+      padding: 5px;
+  }
+
+  .info svg {
+      width: 20px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  width: 90%;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  fill: #FDC500;
+}
+
+.action-icon:hover {
+  fill: #FFD500;
+}
+
+.action-button {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.edit {
+  background-color: #FDC500;
+  color: #00296B;
+}
+
+.delete {
+  background-color: #003F88;
+  color: #FFFFFF;
+}
+
+.info {
+  padding: 2px;
+  background-color: #FDC500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info svg {
+  width: 25px;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
