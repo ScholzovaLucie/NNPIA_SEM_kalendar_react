@@ -25,13 +25,16 @@ Pro instalaci a spuštění aplikace postupujte podle následujících kroků:
    ```bash
    git clone https://github.com/ScholzovaLucie/NNPIA_SEM_kalendar_react.git
 2. Přejděte do adresáře projektu:
-  cd kalendar-app
+   ```bash
+   cd kalendar-app
 
 4. Nainstalujte potřebné balíčky:
-  npm install
+   ```bash
+   npm install
 
-5. Spusťte aplikaci:
-  npm start
+6. Spusťte aplikaci:
+   ```bash
+   npm start
 
 Aplikace by měla být nyní dostupná na http://localhost:3000.
 Technologie
