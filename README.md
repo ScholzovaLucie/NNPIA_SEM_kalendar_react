@@ -1,4 +1,4 @@
-# Kalendar App
+# Kalendar App FrontEnd
 
 Kalendar App je moderní webová aplikace pro správu vašeho osobního i pracovního času. Aplikace nabízí intuitivní rozhraní pro plánování úkolů, správu kontaktů a prohlížení kalendáře.
 
