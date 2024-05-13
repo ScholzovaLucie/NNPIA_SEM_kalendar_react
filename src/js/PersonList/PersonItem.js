@@ -3,7 +3,6 @@ import Detail from "./../Detail";
 import ActionButtons from "./../components/ActionButtons";
 import ApiService from './../API/ApiService';
 import Modal from './../Modal/Modal';
-import "../../css/Person/PersonList.css";
 
 function PersonItem({ user, person, persons, setPersons, setPersonsGlobal, setError }) {
   const apiService = new ApiService('http://localhost:2024/api');

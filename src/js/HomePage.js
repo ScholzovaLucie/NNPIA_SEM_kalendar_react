@@ -7,7 +7,8 @@ import TaskList from "./TaskList/TaskList";
 import ApiService from "./API/ApiService";
 import cake from "./../img/birthday-cake.png";
 import kalendar from "./../img/icons8-calendar-64.png";
-import "../css/components/Item.css"
+import "../css/components/Item.css";
+import "../css/list.css";
 
 export default function HomePage({ user, setUser }) {
   const [date, setDate] = useState(new Date());
@@ -64,9 +65,12 @@ export default function HomePage({ user, setUser }) {
   return (
     <div className="app-container home">
       <main className="main_kalendar">
-        <div className="upozorneni">
-          {closestBirthdayPerson && (
-            <div>
+        <div className="header">
+        <h1>KALENDÁŘ</h1>
+        <Profile user={user} setUser={setUser}/>
+         <div className="upozorneni">
+         {closestBirthdayPerson && (
+            <div >
               <img className="icon" alt="Narozeniny" src={cake} />
               <h2>{closestBirthdayPerson["firstName"]}</h2>
               <h2>{closestBirthdayPerson["lastName"]}</h2>
@@ -97,17 +101,19 @@ export default function HomePage({ user, setUser }) {
               </h2>
             </div>
           )}
+         </div>
+         
         </div>
+        <PersonList
+          user={user}
+          setPersonsGlobal={setPersons}
+          setError={setError}
+        />
         <CustomCalendar
           setDateGlobal={setDate}
           allEvents={allEvents}
           dateGLobal={date}
           persons={persons}
-        />
-        <PersonList
-          user={user}
-          setPersonsGlobal={setPersons}
-          setError={setError}
         />
         <TaskList
           user={user}
@@ -117,9 +123,6 @@ export default function HomePage({ user, setUser }) {
           setDateGlobal={setDate}
         />
       </main>
-      <aside>
-        <Profile user={user} setUser={setUser}/>
-      </aside>
       {error && <pre className="errorHandler">{error.toString()}</pre>}
     </div>
   );

@@ -22,9 +22,6 @@ function App() {
 
   return (
     <div className="app-container">
-      <header>
-        <h1>KALENDÁŘ</h1>
-      </header>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage user={user} setUser={setUser}/>}>
