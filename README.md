@@ -37,6 +37,7 @@ Pro instalaci a spuštění aplikace postupujte podle následujících kroků:
    npm start
 
 Aplikace by měla být nyní dostupná na http://localhost:3000.
+
 Technologie
 
     React - Frontend framework
