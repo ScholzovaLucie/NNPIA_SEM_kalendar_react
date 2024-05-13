@@ -44,7 +44,6 @@ export default function Login({ setUser }) {
       <img className="obrazek_pozadi" src={time} alt="time" />
       <div className={`container ${isSignUpActive ? "right-panel-active" : ""}`}>
         <div className="form-container sign-in-container">
-          <h2>Přihlášení</h2>
           <input
             type="text"
             placeholder="Username"

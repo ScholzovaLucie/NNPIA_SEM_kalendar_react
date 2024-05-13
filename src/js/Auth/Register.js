@@ -36,7 +36,6 @@ function Registration({ setUser }) {
 
   return (
     <div className="form-container sign-up-container">
-      <h2>Registrace</h2>
       <input
         type="text"
         placeholder="Firstname"
