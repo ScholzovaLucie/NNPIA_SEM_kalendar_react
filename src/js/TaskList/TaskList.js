@@ -122,8 +122,8 @@ function TaskList({ user, date, setError, setEventsGlobal, setDateGlobal }) {
 
         )}
         {events.map((event) => (
-          <TaskItem user={user} date={date} setError={setError} event={event} events={events}
-            setEventsGlobal={setEvents} />
+          <TaskItem user={user} date={formatDate(date.toString())} setError={setError} event={event} events={events}
+            setEventsGlobal={setEvents} pageble={{page: pageNumber, size: pageSize, sort: `name,${sort}`}} />
 
         ))}
         {(pageNumber + 1) < Math.ceil(count / pageSize) && (

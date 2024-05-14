@@ -4,7 +4,7 @@ import ActionButtons from "./../components/ActionButtons";
 import ApiService from './../API/ApiService';
 import Modal from './../Modal/Modal';
 
-function PersonItem({ user, person, persons, setPersons, setPersonsGlobal, setError }) {
+function PersonItem({ user, person, persons, setPersons, setPersonsGlobal, setError, pageble }) {
   const apiService = new ApiService('http://localhost:2024/api');
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [personDatilopen, setPersonDatilopen] = useState(null);
@@ -23,7 +23,7 @@ function PersonItem({ user, person, persons, setPersons, setPersonsGlobal, setEr
   };
 
   const onDelete = async (id) => {
-    await apiService.delete('removePerson', { id: id, username: user['username'] })
+    await apiService.delete('removePerson', { id: id, username: user['username'],  page: pageble['page'], size: pageble['size'], sort: pageble['sort'] })
       .then((data) => {
         setPersons(data);
         setPersonsGlobal(data);

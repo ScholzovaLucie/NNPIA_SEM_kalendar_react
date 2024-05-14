@@ -1,6 +1,6 @@
 import "../../css/Profil/Profil.css";
 import Modal from "../Modal/Modal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ApiService from "./../API/ApiService";
 import icon from "./../../img/boy.png";
 import Logout from "./../Auth/Logout";
@@ -56,13 +56,10 @@ function Profile({ user, setUser }) {
         </li>
         <li>
           <Logout setUser={setUser} />
-        </li>
-      </ul>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
+        </li> <Modal
+        isOpen={isModalOpen} onClose={() => {
+          setIsModalOpen(false)
+         }}
       >
         {
           <form>
@@ -124,6 +121,8 @@ function Profile({ user, setUser }) {
           </form>
         }
       </Modal>
+      </ul>
+     
     </div>
   );
 }

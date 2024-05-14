@@ -7,7 +7,7 @@ import {formatTime} from "./../utility";
 import { TimePicker } from "antd";
 import dayjs from "dayjs";
 
-function TaskItem({ user, date, setError, event, setEventsGlobal, events }) {
+function TaskItem({ user, date, setError, event, setEventsGlobal, events, pageble }) {
   const apiService = new ApiService("http://localhost:2024/api");
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskDatilopen, setTaskDatilopen] = useState(null);
@@ -21,7 +21,7 @@ function TaskItem({ user, date, setError, event, setEventsGlobal, events }) {
 
   const onDelete = async(id) => {
     await apiService
-      .delete("removeTask", { id: id, username: user["username"], date: date })
+      .delete("removeTask", { id: id, username: user["username"], date: date,  page: pageble['page'], size: pageble['size'], sort: pageble['sort']  })
       .then((data) => {
         setEventsGlobal(data);
         setError("");

@@ -37,7 +37,6 @@ function PersonList({ user, setPersonsGlobal, setError }) {
 
   const newPersonSubmit = async (e) => {
     e.preventDefault();
-    console.log(pageSize)
         await apiService.put('createPerson', { 
             username: user['username'], 
             firstName: newPerson['firstName'],
@@ -70,7 +69,6 @@ function PersonList({ user, setPersonsGlobal, setError }) {
 
       await apiService.get('getAllPersons', { username: user['username'], page: pageNumber, size: pageSize, sort: `lastName,${sort}`   })
       .then((data) => {
-        console.log(data);
         setPersons(data);
         setPersonsGlobal(data);
         setIsModalOpen(false);
@@ -81,13 +79,8 @@ function PersonList({ user, setPersonsGlobal, setError }) {
       await apiService.get('getCountOfPerson', { username: user['username'] })
       .then((data) => {
         setCount(data);
-        console.log(pageNumber + 1)
-        console.log(count)
-        console.log(pageSize)
-        console.log(count % pageSize)
-        console.log((pageNumber + 1) < (count % pageSize))
       })
-      .catch(error => setError("Chyba při načítání dat z AP person: ", error));
+      .catch(error => setError("Chyba při načítání dat z AP person count: ", error));
     }
     callApi();
   }, [ user, setError, setPersonsGlobal, sort, count, pageNumber, pageSize]); 
@@ -116,7 +109,9 @@ function PersonList({ user, setPersonsGlobal, setError }) {
                     user={user}
                     setPersons={setPersons}
                     setPersonsGlobal={setPersonsGlobal}
-                    setError={setError} />
+                    setError={setError} 
+                    pageble={{page: pageNumber, size: pageSize, sort: `lastName,${sort}`}}
+                    />
       ))}
       {(pageNumber + 1) < Math.ceil(count / pageSize) && (
         <div  className='arrowBlok'> 
