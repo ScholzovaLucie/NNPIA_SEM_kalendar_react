@@ -5,6 +5,7 @@ import ApiService from "./../API/ApiService";
 import icon from "./../../img/boy.png";
 import Logout from "./../Auth/Logout";
 import { hashPassword } from "./../utility";
+import { setSeconds } from "rsuite/esm/utils/dateUtils";
 
 function Profile({ user, setUser }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +41,8 @@ function Profile({ user, setUser }) {
         })
         .catch((error) => setError("Chyba při aktualizaci uživatele:", error));
     });
+    setPasswordSecond("");
+    setPasswordsMatch(false);
   };
 
   return (
@@ -58,7 +61,7 @@ function Profile({ user, setUser }) {
           <Logout setUser={setUser} />
         </li> <Modal
         isOpen={isModalOpen} onClose={() => {
-          setIsModalOpen(false)
+          setIsModalOpen(false);
          }}
       >
         {
